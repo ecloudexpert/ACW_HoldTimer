@@ -1,0 +1,107 @@
+<design:component label="After Call Work Calculator">
+    
+    <design:attribute name="title" 
+                      label="Title" 
+                      description="Title for the component."
+                      default="Call Activity Monitor"/>
+
+    <design:attribute name="forceCloseOnTimeout" 
+                      label="Close tab on time-out?" 
+                      description="Select if you want to close the work item tab in case ACW exceeds threshold."/>
+
+    <design:attribute name="openOmniChannelOnTimeout" 
+                      label="Open Omni-channel on time-out?" 
+                      description="Select if you want to open Omni-Channel utility in case ACW exceeds threshold."/>
+
+    <design:attribute name="showNotificationBanners" 
+                      label="Show Notification Banner?" 
+                      description="Select if you want to show toasts when threshold or warning time is reached."/> 
+                      
+    <design:attribute name="enableBrowserNotification" 
+                      label="Show Browser Notification?" 
+                      description="Select if you want to show broswer notifications."/> 
+    
+    <design:attribute name="warningDuration" 
+                      label="Warning duration" 
+                      description="Warning Duration (in seconds)"
+                      default="15"/>
+
+    <design:attribute name="thresholdWarningMessage" 
+                      label="Warning message" 
+                      description="Message to appear when warning time is reached."
+                      default="Your work-item window will close in 15 seconds."/>
+
+    <design:attribute name="thresholdWarningBannerType" 
+                      datasource="Error,Info,Success,Warning"
+                      label="Warning Banner Type"
+                      default="Warning"/>
+
+    <design:attribute name="timeOutDuration" 
+                      label="Time-out duration" 
+                      description="Threshold Duration (in seconds)"
+                      default="30"/>
+
+    <design:attribute name="thresholdTimeoutMessage" 
+                      label="Timeout message" 
+                      description="Message to appear when threshold time is reached."
+                      default="The window is closed as you reached the threshold time-out value."/>
+
+    <design:attribute name="thresholdTimeoutBannerType" 
+                      datasource="Error,Info,Success,Warning"
+                      label="Timeout Banner Type"
+                      default="Info"/>
+
+    <design:attribute name="saveTimeToRecord" 
+                      label="Store ACW Time on record?" 
+                      description="Select if you want to store the After Call Work time value on the Voice Call Record."/>
+
+    <design:attribute name="enableAudioNotification"
+                    label="Play audio with notifications"
+                    default="false"
+                    description="Select if you want to play audio with browser notifications."/>
+
+    <design:attribute name="notificationSoundUrl"
+                    label="Notification Audio URL"
+                    default="/resource/ACWNotificationSound"
+                    description="URL of the audio you want to play with notifications"/>
+    
+    <design:attribute name="warningToastMode"
+                    label="Warning Toast Mode"
+                    datasource="pester,sticky" 
+                    default="pester"
+                    description="Mode for the toast message to be displayed on reaching warning time. Select 'pester' to auto-dismiss it in 3 seconds or 'sticky' to disable auto dismiss."/>
+    
+    <design:attribute name="timeoutToastMode"
+                    label="Time-out Toast Mode"
+                    datasource="pester,sticky" 
+                    default="sticky"
+                    description="Mode for the toast message to be displayed on reaching time-out time. Select 'pester' to auto-dismiss it in 3 seconds or 'sticky' to disable auto dismiss."/>
+
+
+    <!-- Call hold Audio/Toast Notifications -->
+
+
+    <design:attribute name="enableCallholdAudioNotification"
+                      label="Play audio with notifications for Call on Hold"
+                      default="true"
+                      description="Select if you want to play audio for Call on hold with browser notifications."/>
+
+    <design:attribute name="enableCallHoldBrowserNotification"
+                        label="Show Call Hold Browser Notification?" 
+                        description="Select if you want to show call hold broswer notifications."/> 
+   
+    <design:attribute name="showCallHoldNotificationBanners" 
+                        label="Show Call Hold Notification Banner?" 
+                        description="Select if you want to show toasts when call hold threshold or warning time is reached."/> 
+
+    <design:attribute name="callholdWarningDuration" 
+                      label="Call Hold Warning duration" 
+                      description="Call Hold Warning Duration (in seconds)"
+                      default="15"/>
+
+    <design:attribute name="callHoldWarningMessage" 
+                      label="Call Hold Warning message" 
+                      description="Call hold Message to appear when Call hold warning time is reached."
+                      default="Your call is on Hold."/>
+                      
+</design:component>

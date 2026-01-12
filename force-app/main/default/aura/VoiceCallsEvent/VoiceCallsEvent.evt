@@ -1,0 +1,11 @@
+<aura:event type="APPLICATION" description="This event will be used to interact with Voice Calls controlcomponent" access="global">
+	<aura:attribute name="eventType"
+					type="String"
+					description="Type of the event being fired"
+					required="true"
+					access="global"/>
+	<aura:attribute name="eventData"
+					type="Object"
+					description="Map of key-value to carry data"
+					access="global"/>
+</aura:event>
