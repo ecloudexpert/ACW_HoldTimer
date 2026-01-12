@@ -1,0 +1,267 @@
+<aura:component implements="opencti:availableForVoiceExtension, flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:hasSObjectName" 
+                access="global"
+                controller="ACWApexController">
+                
+    <lightning:workspaceAPI aura:id="workspace"/>
+
+    <aura:attribute name="showACWTimer"
+                    description="Access specifier for ACW timer"
+                    type="String"
+                    default="false"/>
+
+    <aura:attribute name="showHoldTimer"
+                    description="Access specifier for call-hold timer"
+                    type="String"
+                    default="false"/>
+
+    <c:acwTimerCalculatorAssistant ontelephonyevent="{!c.handleVoiceCallsEvent}"
+                                   onfeaturepermissioncheckcomplete="{!c.setFeaturePermissions}"
+                                   recordId="{!v.recordId}" 
+                                   vendorKey="{!v.vendorKeyFromRecord}">
+    </c:acwTimerCalculatorAssistant>
+    
+    <!-- Attributes corresponding to Design attributes -->
+    
+    <aura:attribute name="title"
+                    default="Call Activity Monitor"
+                    description="Title for the component."
+                    type="String" 
+                    access="global"/>
+
+    <aura:attribute name="showNotificationBanners"
+                    description="Select if you want to show toasts when threshold or warning time is reached."
+                    type="Boolean" 
+                    access="global"
+                    default="true"/>
+
+    <aura:attribute name="enableBrowserNotification"
+                    description="Select if you want to show broswer notifications."
+                    type="Boolean" 
+                    access="global"
+                    default="true"/>
+
+    <aura:attribute name="forceCloseOnTimeout"
+                    description="Select if you want to close the work item tab in case ACW exceeds threshold."
+                    type="Boolean" 
+                    access="global"/>
+
+    <aura:attribute name="openOmniChannelOnTimeout"
+                    description="Select if you want to open Omni-Channel utility in case ACW exceeds threshold."
+                    type="Boolean" 
+                    access="global"/>
+
+    <aura:attribute name="timeOutDuration" 
+                    description="Threshold Duration (in seconds)"
+                    type="Integer"
+                    default="30" 
+                    access="global"/>
+
+    <aura:attribute name="warningDuration" 
+                    description="Warning Duration (in seconds)"
+                    type="Integer"
+                    default="15" 
+                    access="global"/>
+
+    <aura:attribute name="thresholdWarningMessage"
+                    description="Message to appear when warning time is reached."
+                    type="String" 
+                    access="global"/>
+
+    <aura:attribute name="thresholdTimeoutMessage"
+                    description="Message to appear when threshold time is reached."
+                    type="String" 
+                    access="global"/>
+    
+    <aura:attribute name="saveTimeToRecord"
+                    description="Select if you want to store the After Call Work time value on the Voice Call Record."
+                    type="Boolean" 
+                    access="global"/>
+
+    <aura:attribute name="thresholdWarningBannerType"
+                    description="Type of banner to display for After Call Work warning."
+                    type="String"
+                    default="Warning"
+                    access="global"/>
+    
+    <aura:attribute name="thresholdTimeoutBannerType"
+                    description="Type of banner to display for After Call Work timeout."
+                    type="String" 
+                    default="Info"
+                    access="global"/>
+
+    <aura:attribute name="enableAudioNotification"
+                    description="Select if you want to play audio with browser notifications."
+                    type="Boolean" 
+                    access="global"
+                    default="false"/>
+
+    <aura:attribute name="notificationSoundUrl"
+                    description="Type of banner to display for After Call Work timeout."
+                    type="String" 
+                    default="/resource/ACWNotificationSound"
+                    access="global"/>
+    
+    <aura:attribute name="warningToastMode"
+                    description="Mode for the toast message to be displayed on reaching warning time."
+                    type="String"
+                    default="pester"
+                    access="global"/> 
+    
+    <aura:attribute name="timeoutToastMode"
+                    description="Mode for the toast message to be displayed on reaching time-out time."
+                    type="String"
+                    default="sticky"
+                    access="global"/>            
+
+    <!-- Normal aura attributes -->
+
+    <aura:attribute name="currentTabId"
+                    type="String"
+                    default=""
+                    description="Stores the enclosing tab id."/>
+    <aura:attribute name="acwTimerObject"
+                    type="Object"
+                    default="{}"
+                    description="Stores the time after a call was disconnected and the agent closes the Voice call window, and its user friendliy representation."/>
+    <aura:attribute name="vendorKeyFromEvent"
+                    type="String"
+                    default=""
+                    description="Stores the vendor call key for the ended call."/>
+    <aura:attribute name="voiceCall"
+                    type="SObject"
+                    default="{}"
+                    description="VoiceCall record"/>
+    <aura:attribute name="holdTimerObject"
+                    type="Object"
+                    default="{}"
+                    description="Stores the hold time and its user friendliy representation."/>
+    <aura:attribute name="vendorKeyFromRecord"
+                    type="String"
+                    default=""
+                    description="Stores the CendorCallKey from the current voice call record."/>
+    <aura:attribute name="browserNotificationPermissionGranted"
+                    description="Flag to tell if agent granted permission for showing browser notification."
+                    type="Boolean"/>
+    <aura:attribute name="lastHoldDurationInSeconds"
+                    description="Variable to store last hold duration (in seconds)"
+                    type="Integer"
+                    default="0"/>
+                    
+    <aura:attribute name="warningDurationMet"
+                    description="Variable to store if the warning duration limit is hit or not"
+                    type="Boolean"
+                    default="false"/>
+    <aura:attribute name="timeoutDurationMet"
+                    description="Variable to store if the timeout duration limit is hit or not"
+                    type="Boolean"
+                    default="false"/>    
+                    
+    <!-- Attributes for Call hold Audio/Toast Notifications -->
+
+    <aura:attribute name="enableCallholdAudioNotification"
+                    description="Select if you want to play audio for Call on hold with browser notifications."
+                    type="Boolean" 
+                    access="global"
+                    default="true"/>
+
+    <aura:attribute name="enableCallHoldBrowserNotification"
+                    description="Select if you want to show call hold broswer notifications."
+                    type="Boolean" 
+                    access="global"
+                    default="true"/>
+    
+    <aura:attribute name="showCallHoldNotificationBanners"
+                    description="Select if you want to show toasts when call hold threshold or warning time is reached."
+                    type="Boolean" 
+                    access="global"
+                    default="true"/>
+
+    <aura:attribute name="callholdWarningDuration" 
+                    description="Call Hold Warning Duration (in seconds)"
+                    type="Integer"
+                    default="15" 
+                    access="global"/>
+
+    <aura:attribute name="callHoldWarningMessage"
+                    description="Call Hold Message to appear when Call Hold warning time is reached."
+                    type="String" 
+                    default="Your call is on Hold."
+                    access="global"/>
+
+    <aura:attribute name="callHoldWarningDurationMet"
+                    description="Variable to store if the call hold warning duration limit is hit or not"
+                    type="Boolean"
+                    default="false"/>
+    
+    <aura:handler name="init"
+                  value="{!this}" 
+                  action="{!c.onInit}"/>
+
+    <aura:handler event="lightning:tabClosed" 
+                  action="{!c.handleTabClosed}"/>
+    
+    <aura:registerEvent name="voiceCallsEvent" type="c:VoiceCallsEvent"/>
+    
+    <lightning:card title="{#v.title}" iconName="standard:business_hours">
+        <div class="slds-p-horizontal--medium">
+            <div class="slds-form-element slds-form-element_readonly slds-m-bottom--small">
+                <div class="slds-form-element__label">
+                    <span>
+                        After Call Work Duration
+                    </span>
+                </div>
+                <aura:if isTrue="{!v.showACWTimer}">
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static">
+                            <span>
+                                {!v.acwTimerObject.acwTimerString}
+                            </span>
+                        </span>
+                    </div>
+                    <aura:set attribute="else">
+                        <div class="slds-box slds-box--xx-small slds-notify slds-notify_alert slds-alert_offline slds-m-vertical--xx-small" role="alert">
+                            <span class="slds-assistive-text">Missing required permission</span>
+                            <lightning:icon iconName="utility:block_visitor" 
+                                            class="slds-m-right_x-small" 
+                                            alternativeText="Missing required permission"
+                                            size="small">
+                            </lightning:icon>
+                            <p>
+                                You do not have the necessary permissions to see this data.
+                            </p>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </div>
+            <div class="slds-form-element slds-form-element_readonly slds-m-bottom--small">
+                <div class="slds-form-element__label">
+                    <span>
+                        Call Hold Duration
+                    </span>
+                </div>
+                <aura:if isTrue="{!v.showHoldTimer}">
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static">
+                            <span>
+                                {!v.holdTimerObject.holdTimerString}
+                            </span>
+                        </span>
+                    </div>
+                    <aura:set attribute="else">
+                        <div class="slds-box slds-box--xx-small slds-notify slds-notify_alert slds-alert_offline slds-m-vertical--xx-small" role="alert">
+                            <span class="slds-assistive-text">Missing required permission</span>
+                            <lightning:icon iconName="utility:block_visitor" 
+                                            class="slds-m-right_x-small" 
+                                            alternativeText="Missing required permission"
+                                            size="small">
+                            </lightning:icon>
+                            <p>
+                                You do not have the necessary permissions to see this data.
+                            </p>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </div>
+        </div>
+    </lightning:card>
+</aura:component>
